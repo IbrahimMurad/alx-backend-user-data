@@ -61,3 +61,30 @@ def get_db() -> MySQLConnection:
         host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),
         database=getenv('PERSONAL_DATA_DB_NAME')
         )
+
+
+def main():
+    """ the main function that retrieves all rows from the users table
+    and print them with the PII obfuscated"""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    for row in cursor:
+        message = "{}; {}; {}; {}; {}; {}; {}; {};".format(
+            f"name={row[0]}",
+            f"email={row[1]}",
+            f"phone={row[2]}",
+            f"ssn={row[3]}",
+            f"password={row[4]}",
+            f"ip={row[5]}",
+            f"last_login={row[6]}",
+            f"user_agent={row[7]}"
+            )
+        logger = get_logger()
+        logger.info(message)
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()

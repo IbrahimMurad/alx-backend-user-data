@@ -72,6 +72,7 @@ def main():
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
+    logger = get_logger()
     for row in cursor:
         message = "{}; {}; {}; {}; {}; {}; {}; {};".format(
             f"name={row[0]}",
@@ -83,7 +84,6 @@ def main():
             f"last_login={row[6]}",
             f"user_agent={row[7]}"
             )
-        logger = get_logger()
         logger.info(message)
     cursor.close()
     db.close()

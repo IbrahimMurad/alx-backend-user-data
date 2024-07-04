@@ -56,8 +56,8 @@ def get_db() -> MySQLConnection:
     """ returns a connection to a secure 'holberton' database
     to read a users table """
     return MySQLConnection(
-        host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),
         user=getenv('PERSONAL_DATA_DB_USERNAME', "root"),
         password=getenv('PERSONAL_DATA_DB_PASSWORD', ""),
-        database=getenv('PERSONAL_DATA_DB_NAME')
+        host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),
+        database=getenv('PERSONAL_DATA_DB_NAME', "holberton")
         )

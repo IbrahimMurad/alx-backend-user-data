@@ -5,6 +5,8 @@ that returns the log message obfuscated:
 from typing import List
 import re
 import logging
+from mysql.connector import MySQLConnection
+from os import getenv
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -48,3 +50,14 @@ def get_logger() -> logging.Logger:
     log_handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger.addHandler(log_handler)
     return logger
+
+
+def get_db() -> MySQLConnection:
+    """ returns a connection to a secure 'holberton' database
+    to read a users table """
+    return MySQLConnection(
+        host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),
+        user=getenv('PERSONAL_DATA_DB_USERNAME', "root"),
+        password=getenv('PERSONAL_DATA_DB_PASSWORD', ""),
+        database=getenv('PERSONAL_DATA_DB_NAME', "holberton")
+        )

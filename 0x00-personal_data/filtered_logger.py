@@ -55,11 +55,13 @@ def get_logger() -> logging.Logger:
 def get_db() -> MySQLConnection:
     """ returns a connection to a secure 'holberton' database
     to read a users table """
+    if getenv('PERSONAL_DATA_DB_NAME') is None:
+        raise ValueError("database name is not set in environment")
     return connect(
         user=getenv('PERSONAL_DATA_DB_USERNAME', "root"),
         password=getenv('PERSONAL_DATA_DB_PASSWORD', ""),
         host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),
-        database=getenv('PERSONAL_DATA_DB_NAME', ""),
+        database=getenv('PERSONAL_DATA_DB_NAME'),
         port=3306,
         )
 

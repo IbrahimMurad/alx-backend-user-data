@@ -5,7 +5,7 @@ that returns the log message obfuscated:
 from typing import List
 import re
 import logging
-from mysql.connector import MySQLConnection
+from mysql.connector import MySQLConnection, connect
 from os import getenv
 
 
@@ -55,7 +55,7 @@ def get_logger() -> logging.Logger:
 def get_db() -> MySQLConnection:
     """ returns a connection to a secure 'holberton' database
     to read a users table """
-    return MySQLConnection(
+    return connect(
         user=getenv('PERSONAL_DATA_DB_USERNAME', "root"),
         password=getenv('PERSONAL_DATA_DB_PASSWORD', ""),
         host=getenv('PERSONAL_DATA_DB_HOST', "localhost"),

@@ -3,6 +3,7 @@
 This module defines Auth class that manages the API authentication.
 """
 from flask import request
+from models.user import User
 from typing import List, TypeVar
 
 
@@ -16,7 +17,7 @@ class Auth:
         if path[-1] != '/':
             path += '/'
         if path in excluded_paths:
-            return False
+            return False    
         return True
 
     def authorization_header(self, request=None) -> str:

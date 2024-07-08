@@ -2,7 +2,6 @@
 """ This module defines BasicAuth class that inherits from Auth class.
 """
 from api.v1.auth.auth import Auth
-from models.user import User
 import base64
 from typing import TypeVar
 
@@ -66,12 +65,16 @@ class BasicAuth(Auth):
             return None
         if user_pwd is None or not isinstance(user_pwd, str):
             return None
-        user = User.search({'email': user_email})
-        if not user:
+        try:
+            from models.user import User
+            user = User.search({'email': user_email})
+            if not user:
+                return None
+            if not user[0].is_valid_password(user_pwd):
+                return None
+            return user[0]
+        except Exception:
             return None
-        if not user[0].is_valid_password(user_pwd):
-            return None
-        return user[0]
 
     def current_user(self, request=None) -> TypeVar('User'):
         """ overloads Auth and retrieves the User instance for a request """

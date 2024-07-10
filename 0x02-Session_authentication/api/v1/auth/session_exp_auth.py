@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" This module defines SessionExpAuth class that inherits from SessionAuth class.
+""" This module defines SessionExpAuth class
+that inherits from SessionAuth class.
 """
 from api.v1.auth.session_auth import SessionAuth
 from os import getenv
@@ -35,7 +36,7 @@ class SessionExpAuth(SessionAuth):
         """ returns a User ID based on a Session ID """
         if (
             session_id is None
-            or not session_id in self.user_id_by_session_id.keys()
+            or session_id not in self.user_id_by_session_id.keys()
         ):
             return None
         session_dictionary = self.user_id_by_session_id.get(session_id)
@@ -43,6 +44,8 @@ class SessionExpAuth(SessionAuth):
             return session_dictionary.get('user_id')
         if 'created_at' not in session_dictionary.keys():
             return None
-        if session_dictionary.get('created_at') + timedelta(seconds=self.session_duration) < datetime.now():
+        created_at = session_dictionary.get('created_at')
+        delta = timedelta(seconds=self.session_duration)
+        if created_at + delta < datetime.now():
             return None
         return session_dictionary.get('user_id')

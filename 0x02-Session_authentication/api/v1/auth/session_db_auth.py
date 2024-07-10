@@ -4,25 +4,32 @@ that inherits from SessionAuth class.
 """
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
+from uuid import uuid4
+from datetime import datetime, timedelta
 
 
 class SessionDBAuth(SessionExpAuth):
     """ this class handles expiring sessions """
     def create_session(self, user_id=None):
         """ creates a session for user_id """
-        sessionID = super().create_session(user_id)
+        sessionID = str(uuid4())
         user_session = UserSession(user_id=user_id, session_id=sessionID)
         user_session.save()
         return sessionID
 
     def user_id_for_session_id(self, session_id=None):
         """ returns a User ID based on a Session ID """
-        user_id = super().user_id_for_session_id(session_id)
-        if user_id is None:
+        if session_id is None:
             return None
         user_session = UserSession.search(
             {'session_id': session_id}
-        )[0]
+        )
+        if not user_session:
+            return None
+        user_session = user_session[0]
+        delta = timedelta(seconds=self.session_duration)
+        if user_session.created_at + delta < datetime.now():
+            return None
         return user_session.user_id
 
     def destroy_session(self, request=None):

@@ -52,4 +52,5 @@ class SessionDBAuth(SessionExpAuth):
             return False
         user_session = user_session[0]
         user_session.remove()
+        super().destroy_session(request)
         return True

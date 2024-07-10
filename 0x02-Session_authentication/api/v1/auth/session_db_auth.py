@@ -17,10 +17,8 @@ class SessionDBAuth(SessionExpAuth):
 
     def user_id_for_session_id(self, session_id=None):
         """ returns a User ID based on a Session ID """
-        if session_id is None:
-            return None
-        user_session = UserSession.search({'session_id': session_id})[0]
-        return user_session.user_id
+        user_id = super().user_id_for_session_id(session_id)
+        return user_id
 
     def destroy_session(self, request=None):
         """ destroys the UserSession based on the Session ID

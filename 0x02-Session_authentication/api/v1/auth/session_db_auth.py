@@ -12,7 +12,7 @@ class SessionDBAuth(SessionExpAuth):
     """ this class handles expiring sessions """
     def create_session(self, user_id=None):
         """ creates a session for user_id """
-        sessionID = super().create_session(user_id)
+        sessionID = str(uuid4())
         user_session = UserSession(user_id=user_id, session_id=sessionID)
         user_session.save()
         return sessionID

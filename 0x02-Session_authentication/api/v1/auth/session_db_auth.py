@@ -26,6 +26,8 @@ class SessionDBAuth(SessionExpAuth):
         """ returns a User ID based on a Session ID """
         if session_id is None:
             return None
+        if session_id in self.user_id_by_session_id.keys():
+            return super().user_id_for_session_id(session_id)
         user_session = UserSession.search(
             {'session_id': session_id}
         )

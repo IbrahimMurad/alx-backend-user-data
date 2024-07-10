@@ -10,6 +10,9 @@ from datetime import datetime, timedelta
 
 class SessionDBAuth(SessionExpAuth):
     """ this class handles expiring sessions """
+    def __init__(self):
+        super().__init__()
+
     def create_session(self, user_id=None):
         """ creates a session for user_id """
         sessionID = str(uuid4())
@@ -27,8 +30,10 @@ class SessionDBAuth(SessionExpAuth):
         if not user_session:
             return None
         user_session = user_session[0]
+        if self.session_duration <= 0:
+            return user_session.user_id
         delta = timedelta(seconds=self.session_duration)
-        if user_session.created_at + delta < datetime.now():
+        if user_session.created_at + delta < datetime.utcnow():
             return None
         return user_session.user_id
 

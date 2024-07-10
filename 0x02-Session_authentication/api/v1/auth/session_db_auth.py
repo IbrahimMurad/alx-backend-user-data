@@ -15,15 +15,18 @@ class SessionDBAuth(SessionExpAuth):
 
     def create_session(self, user_id=None):
         """ creates a session for user_id """
-        sessionID = str(uuid4())
+        if user_id is None or not isinstance(user_id, str):
+            return None
+        sessionID = super().create_session(user_id)
         user_session = UserSession(user_id=user_id, session_id=sessionID)
         user_session.save()
         return sessionID
 
     def user_id_for_session_id(self, session_id=None):
         """ returns a User ID based on a Session ID """
-        if session_id is None:
-            return None
+        user_id = super().user_id_for_session_id(session_id)
+        if user_id:
+            return user_id
         user_session = UserSession.search(
             {'session_id': session_id}
         )

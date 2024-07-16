@@ -35,23 +35,15 @@ class DB:
         self,
         email: str,
         hashed_password: str,
-        **kwargs: dict
+        session_id: str = None,
+        reset_token: str = None
     ) -> User:
         """ adds a new user to the users table """
-        id = None
-        session_id = None
-        reset_token = None
-        for key, value in kwargs.items():
-            if key == 'id':
-                id = value
-            elif key == 'session_id':
-                session_id = value
-            elif key == 'reset_token':
-                reset_token = value
         new_user = User(
             email=email,
             hashed_password=hashed_password,
-            **kwargs
+            session_id=session_id,
+            reset_token=reset_token
             )
         self._session.add(new_user)
         self._session.commit()

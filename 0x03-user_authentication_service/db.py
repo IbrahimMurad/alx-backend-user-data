@@ -46,7 +46,7 @@ class DB:
         """
         return self._session.query(User).filter_by(**kwargs).one()
 
-    def update_user(self, user_id: str, **kwargs) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """ uses find_user_by to locate the user to update,
         then will update the user’s attributes
         as passed in the method’s arguments

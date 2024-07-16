@@ -36,7 +36,7 @@ class DB:
         email: str,
         hashed_password: str,
         **kwargs: dict
-        ) -> User:
+    ) -> User:
         """ adds a new user to the users table """
         id = None
         session_id = None

@@ -45,3 +45,20 @@ class DB:
         found in the users table as filtered by the method’s input arguments.
         """
         return self._session.query(User).filter_by(**kwargs).one()
+
+    def update_user(self, user_id: str, **kwargs) -> None:
+        """ uses find_user_by to locate the user to update,
+        then will update the user’s attributes as passed in the method’s arguments
+        then commit changes to the database.
+
+        Args:
+            user_id (str): id of the user to update
+            kwargs: keyward arguments to be updated in user
+
+        return: None
+        """
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if key in user.__table__.columns.keys():
+                setattr(user, key, value)
+        self._session.commit()

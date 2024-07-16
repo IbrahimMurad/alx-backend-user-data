@@ -48,7 +48,8 @@ class DB:
 
     def update_user(self, user_id: str, **kwargs) -> None:
         """ uses find_user_by to locate the user to update,
-        then will update the user’s attributes as passed in the method’s arguments
+        then will update the user’s attributes
+        as passed in the method’s arguments
         then commit changes to the database.
 
         Args:
@@ -59,6 +60,5 @@ class DB:
         """
         user = self.find_user_by(id=user_id)
         for key, value in kwargs.items():
-            if key in user.__table__.columns.keys():
-                setattr(user, key, value)
+            setattr(user, key, value)
         self._session.commit()

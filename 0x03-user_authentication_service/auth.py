@@ -4,7 +4,7 @@
 from bcrypt import hashpw, gensalt
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
-from typing import TypeVar
+from user import User
 
 
 def _hash_password(password: str) -> bytes:
@@ -19,7 +19,7 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str):
+    def register_user(self, email: str, password: str) -> User:
         """ takes an email string and a password string as arguments
         and returns a User object.
         """

@@ -31,24 +31,17 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(
-        self,
-        email: str,
-        hashed_password: str
-    ) -> User:
-        """ adds a new user to the users table """
-        new_user = User(
-            email=email,
-            hashed_password=hashed_password
-            )
-        self._session.add(new_user)
-        self._session.commit()
-        return new_user
-
-    def find_user_by(self, **kwargs: dict) -> User:
-        """ takes in arbitrary keyword arguments
-        and returns the first row found in the users table
-        as filtered by the method's input arguments.
+    def add_user(self, email: str, hashed_password: str) -> User:
+        """ takes in an email string and a hashed_password string
+        as arguments and returns a User object.
         """
-        user = self._session.query(User).filter_by(**kwargs).one()
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
         return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """ takes in arbitrary keyword arguments and returns the first row
+        found in the users table as filtered by the method’s input arguments.
+        """
+        return self._session.query(User).filter_by(**kwargs).one()

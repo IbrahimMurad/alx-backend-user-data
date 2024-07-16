@@ -31,8 +31,18 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str, **kwargs) -> User:
+    def add_user(self, email: str, hashed_password: str, *args, **kwargs) -> User:
         """ adds a new user to the users table """
+        id = None
+        session_id = None
+        reset_token = None
+        for key, value in kwargs.items():
+            if key == 'id':
+                id = value
+            elif key == 'session_id':
+                session_id = value
+            elif key == 'reset_token':
+                reset_token = value
         new_user = User(
             email=email,
             hashed_password=hashed_password,

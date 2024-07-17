@@ -54,7 +54,7 @@ class Auth:
         returns the session ID as a string """
         try:
             user = self._db.find_user_by(email=email)
-            session_id = str(uuid4())
+            session_id = _generate_uuid()
             user.session_id = session_id
             self._db._session.commit()
             return session_id
@@ -84,8 +84,25 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-            reset_token = str(uuid4())
+            reset_token = _generate_uuid()
             self._db.update_user(user.id, reset_token=reset_token)
             return reset_token
+        except NoResultFound:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """ uses the reset_token to find the corresponding user.
+        If it does not exist, raise a ValueError exception.
+        Otherwise, hash the password and
+        update the user’s hashed_password field
+        with the new hashed password and the reset_token field to None.
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            user.reset_token = None
+            self._db.update_user(
+                user.id,
+                hashed_password=_hash_password(password)
+                )
         except NoResultFound:
             raise ValueError

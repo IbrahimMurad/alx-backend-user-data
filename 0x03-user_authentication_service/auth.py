@@ -4,6 +4,7 @@
 from bcrypt import hashpw, gensalt, checkpw
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Optional
 from user import User
 from uuid import uuid4
 
@@ -58,4 +59,13 @@ class Auth:
             self._db._session.commit()
             return session_id
         except NoResultFound:
+            return None
+
+    def get_user_from_session_id(self, session_id: str) -> Optional[User]:
+        """ finds user by session id """
+        if not session_id:
+            return None
+        try:
+            return self._db.find_user_by(session_id=session_id)
+        except Exception:
             return None

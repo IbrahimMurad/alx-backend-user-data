@@ -2,7 +2,14 @@
 """ This is flask app
 """
 from auth import Auth
-from flask import Flask, jsonify, request, abort
+from flask import (
+    abort,
+    Flask,
+    jsonify,
+    redirect,
+    request,
+    url_for
+)
 
 
 AUTH = Auth()
@@ -54,6 +61,21 @@ def login() -> str:
     response = jsonify({"email": email, "message": "logged in"})
     response.set_cookie('session_id', session_id)
     return response
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout() -> str:
+    """ DELETE /sessions
+    logout the user
+    If the user exists destroy the session and redirect the user to GET /.
+    If the user does not exist, respond with a 403 HTTP status."""
+    session_id = request.cookies.get('session_id')
+    if session_id:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            AUTH.destroy_session(user.id)
+            return redirect(url_for('basic'))
+    abort(403)
 
 
 if __name__ == "__main__":

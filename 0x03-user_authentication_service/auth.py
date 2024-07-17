@@ -29,7 +29,7 @@ class Auth:
         except NoResultFound:
             pass
         return self._db.add_user(email, _hash_password(password))
-    
+
     def valid_login(self, email: str, password: str) -> bool:
         """ locats the user by email.
         If it exists, check the password with bcrypt.checkpw.

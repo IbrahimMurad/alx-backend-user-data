@@ -46,7 +46,7 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             return checkpw(password.encode(), user.hashed_password)
-        except Exception:
+        except NoResultFound:
             return False
 
     def create_session(self, email: str) -> str:

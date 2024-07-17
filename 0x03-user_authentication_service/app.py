@@ -19,16 +19,17 @@ def basic() -> str:
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def users() -> str:
-    """ POST /users 
+    """ POST /users
     an end-point to register a user
     Returns: a JSON payload: {"email": "<email>", "message": "user created"}
-    Or: a JSON payload: {"message": "email already registered"} with a 400 status code
+    Or: a JSON payload: {"message": "email already registered"}
+    with a 400 status code
     """
     email = request.form.get("email")
     password = request.form.get("password")
     if email and password:
         try:
-            user = AUTH.register_user(email,password)
+            user = AUTH.register_user(email, password)
             return jsonify({"email": user.email, "message": "user created"})
         except ValueError:
             return jsonify({"message": "email already registered"}), 400

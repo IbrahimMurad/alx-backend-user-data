@@ -3,6 +3,7 @@
 """
 from bcrypt import hashpw, gensalt, checkpw
 from db import DB
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from typing import Optional
 from user import User
@@ -46,7 +47,7 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             return checkpw(password.encode('utf-8'), user.hashed_password)
-        except Exception:
+        except (NoResultFound, InvalidRequestError):
             return False
 
     def create_session(self, email: str) -> str:
